@@ -3,9 +3,11 @@ package com.example.idtechmsorders.service;
 import com.example.idtechmsorders.dto.CreateTeacherRequest;
 import com.example.idtechmsorders.dto.TeacherDto;
 import com.example.idtechmsorders.entity.Teacher;
+import com.example.idtechmsorders.exception.CustomException;
 import com.example.idtechmsorders.mapper.TeacherMapper;
 import com.example.idtechmsorders.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,14 +32,14 @@ public class TeacherService {
     }
    public TeacherDto findTeacherById(Long id) {
        Teacher teacher = teacherRepository.findById(id)
-               .orElseThrow(() -> new RuntimeException("Teacher not found! ID: " + id));
+               .orElseThrow(() -> new CustomException("Teacher not found", "id", HttpStatus.NOT_FOUND));
 
        return TeacherMapper.mapToTeacherDto(teacher);
    }
 
    public Teacher updateTeacher(CreateTeacherRequest request) {
        Teacher teacher =  teacherRepository.findById(request.getId())
-               .orElseThrow(() -> new RuntimeException("Teacher not found! ID: " + request.getId()));
+               .orElseThrow(() -> new CustomException("Teacher not found", "id", HttpStatus.NOT_FOUND));
        teacher.setFirstName(request.getFirstName());
        teacher.setLastName(request.getLastName());
 
