@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-20260209-02
+      author: school_admin
+      changes:
+        - createTable:
+            tableName: courses
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: course_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false

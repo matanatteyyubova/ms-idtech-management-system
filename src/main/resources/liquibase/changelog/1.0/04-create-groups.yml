@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-20260209-04
+      author: school_admin
+      changes:
+        - createTable:
+            tableName: groups
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: group_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: double precision
+                  constraints:
+                    nullable: false
+              - column:
+                  name: teacher_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_groups_teacher
+                    referencedTableName: teachers
+                    referencedColumnNames: id
+              - column:
+                  name: course_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_groups_course
+                    referencedTableName: courses
+                    referencedColumnNames: id
+
+
+

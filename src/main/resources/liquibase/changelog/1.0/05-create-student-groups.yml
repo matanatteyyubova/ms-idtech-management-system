@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-20260209-05
+      author: school_admin
+      changes:
+        - createTable:
+            tableName: student_groups
+            columns:
+              - column:
+                  name: student_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: group_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: student_groups
+            baseColumnNames: student_id
+            referencedTableName: students
+            referencedColumnNames: id
+            constraintName: fk_sg_student
+        - addForeignKeyConstraint:
+            baseTableName: student_groups
+            baseColumnNames: group_id
+            referencedTableName: groups
+            referencedColumnNames: id
+            constraintName: fk_sg_group
