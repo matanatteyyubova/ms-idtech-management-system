@@ -1,7 +1,7 @@
 package com.example.idtechmsorders.service;
 
-import com.example.idtechmsorders.dto.CreateTeacherRequest;
-import com.example.idtechmsorders.dto.TeacherDto;
+import com.example.idtechmsorders.dto.request.CreateTeacherDto;
+import com.example.idtechmsorders.dto.response.TeacherDto;
 import com.example.idtechmsorders.entity.Teacher;
 import com.example.idtechmsorders.exception.CustomException;
 import com.example.idtechmsorders.mapper.TeacherMapper;
@@ -18,11 +18,11 @@ public class TeacherService {
     private final TeacherRepository teacherRepository;
 
 
-   public void createTeacher(CreateTeacherRequest request) {
+   public TeacherDto createTeacher(CreateTeacherDto request) {
        Teacher teacher = new Teacher();
        teacher.setFirstName(request.getFirstName());
        teacher.setLastName(request.getLastName());
-       teacherRepository.save(teacher);
+       return TeacherMapper.mapToTeacherDto(teacherRepository.save(teacher));
    }
     public List<TeacherDto> getAllTeachers() {
        List<Teacher> teachers = teacherRepository.findAll();
@@ -37,7 +37,7 @@ public class TeacherService {
        return TeacherMapper.mapToTeacherDto(teacher);
    }
 
-   public Teacher updateTeacher(CreateTeacherRequest request) {
+   public Teacher updateTeacher(CreateTeacherDto request) {
        Teacher teacher =  teacherRepository.findById(request.getId())
                .orElseThrow(() -> new CustomException("Teacher not found", "id", HttpStatus.NOT_FOUND));
        teacher.setFirstName(request.getFirstName());

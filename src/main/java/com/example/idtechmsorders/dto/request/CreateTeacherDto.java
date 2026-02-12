@@ -1,18 +1,14 @@
-package com.example.idtechmsorders.dto;
+package com.example.idtechmsorders.dto.request;
 
-import com.example.idtechmsorders.entity.Group;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
-public class TeacherDto {
+public class CreateTeacherDto {
     private Long id;
     private String firstName;
     private String lastName;
-
 }

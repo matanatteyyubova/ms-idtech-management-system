@@ -1,11 +1,11 @@
 package com.example.idtechmsorders.mapper;
 
-import com.example.idtechmsorders.dto.CreateTeacherRequest;
-import com.example.idtechmsorders.dto.TeacherDto;
+import com.example.idtechmsorders.dto.request.CreateTeacherDto;
+import com.example.idtechmsorders.dto.response.TeacherDto;
 import com.example.idtechmsorders.entity.Teacher;
 
 public class TeacherMapper {
-    public static Teacher mapToTeacher(CreateTeacherRequest request) {
+    public static Teacher mapToTeacher(CreateTeacherDto request) {
         return Teacher.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())

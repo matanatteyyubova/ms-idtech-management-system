@@ -1,13 +1,15 @@
 package com.example.idtechmsorders.controller;
 
 
-import com.example.idtechmsorders.dto.CreateTeacherRequest;
-import com.example.idtechmsorders.dto.TeacherDto;
+import com.example.idtechmsorders.dto.request.CreateTeacherDto;
+import com.example.idtechmsorders.dto.response.TeacherDto;
 import com.example.idtechmsorders.service.TeacherService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,24 +19,32 @@ public class TeacherController {
     private final TeacherService teacherService;
 
     @GetMapping
-    public List<TeacherDto> getAllTeachers() {
-        return teacherService.getAllTeachers();
+    public ResponseEntity<List<TeacherDto>> get() {
+        return  ResponseEntity.ok(teacherService.getAllTeachers());
     }
 
     @GetMapping("/{id}")
-    public TeacherDto getTeacherById(@PathVariable Long id) {
-        return teacherService.findTeacherById(id);
-
+    public ResponseEntity<TeacherDto> getById(@PathVariable Long id) {
+        TeacherDto teacher = teacherService.findTeacherById(id);
+        return ResponseEntity.ok(teacher);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createTeacher(@RequestBody CreateTeacherRequest request) {
-        teacherService.createTeacher(request);
+    public ResponseEntity<TeacherDto> create(@RequestBody CreateTeacherDto request) {
+
+       TeacherDto createdTeacher= teacherService.createTeacher(request);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(createdTeacher.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(createdTeacher);
     }
 
     @PutMapping
-    public void updateTeacher(@RequestBody CreateTeacherRequest request) {
+    public ResponseEntity<Void> update(@RequestBody CreateTeacherDto request) {
         teacherService.updateTeacher(request);
+        return ResponseEntity.ok().build();
     }
 }

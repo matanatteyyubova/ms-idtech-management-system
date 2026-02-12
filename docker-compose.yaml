@@ -3,9 +3,9 @@ version: "3.9"
 services:
   postgres:
     image: postgres:17
-    container_name: postgres
+    container_name: ms_postgres
     environment:
-      POSTGRES_DB: postgres
+      POSTGRES_DB: ms-management-idtech
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
     ports:
