@@ -1,5 +1,6 @@
 package com.example.idtechmsorders.service;
 
+import com.example.idtechmsorders.cache.RedisCacheService;
 import com.example.idtechmsorders.dto.request.CreateCourseDto;
 import com.example.idtechmsorders.dto.response.CourseDto;
 import com.example.idtechmsorders.entity.Course;
@@ -17,12 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseService {
     private final CourseRepository courseRepository;
+    private final RedisCacheService redisCacheService;
 
-    public CourseDto createCourse(CreateCourseDto courseDto){
-        Course course = CourseMapper.mapToCourse(courseDto);
-        Course savedCourse= courseRepository.save(course);
-        return CourseMapper.mapToCourseDto(savedCourse);
-    };
 
 
     public List<CourseDto> getAllCourses(){
@@ -31,20 +28,42 @@ public class CourseService {
                 .map((CourseMapper::mapToCourseDto)).toList();
     };
 
+    public CourseDto createCourse(CreateCourseDto courseDto){
+        Course course = CourseMapper.mapToCourse(courseDto);
+        Course savedCourse = courseRepository.save(course);
+        CourseDto response = CourseMapper.mapToCourseDto(savedCourse);
+
+        redisCacheService.setValue("course:" + response.getId(), response,10);
+
+        return response;
+    }
+
     public CourseDto getCourseById(Long id){
+        Object cachedCourse = redisCacheService.getValue("course:" + id);
+        if (cachedCourse != null) {
+            return (CourseDto) cachedCourse;
+        }
+
         Course course = courseRepository.findById(id)
-                .orElseThrow(()-> new CustomException("Course not found!" ,"id", HttpStatus.NOT_FOUND));
-        return CourseMapper.mapToCourseDto(course);
+                .orElseThrow(() -> new CustomException("Course not found!", "id", HttpStatus.NOT_FOUND));
+
+        CourseDto response = CourseMapper.mapToCourseDto(course);
+
+        redisCacheService.setValue("course:" + id, response,10);
+
+        return response;
     }
 
     public void updateCourse(CreateCourseDto courseDto) {
-
         Course course = courseRepository.findById(courseDto.getId())
                 .orElseThrow(() -> new CustomException("Course not found!", "id", HttpStatus.NOT_FOUND));
 
         course.setCourseName(courseDto.getCourseName());
-
         courseRepository.save(course);
+
+        CourseDto updatedDto = CourseMapper.mapToCourseDto(course);
+
+        redisCacheService.setValue("course:" + updatedDto.getId(), updatedDto,10);
     }
 
 }

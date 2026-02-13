@@ -10,7 +10,12 @@ spring:
     hibernate:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    redis:
+      host: localhost
+      port: 6379
   liquibase:
     change-log: classpath:/liquibase/changelog-master.yml
+
 server:
   port: 9898

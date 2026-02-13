@@ -1,8 +1,6 @@
 package com.example.idtechmsorders.controller;
 
 import com.example.idtechmsorders.dto.request.CreateGroupDto;
-import com.example.idtechmsorders.dto.request.CreateStudentDto;
-import com.example.idtechmsorders.dto.response.CourseDto;
 import com.example.idtechmsorders.dto.response.GroupDto;
 import com.example.idtechmsorders.service.GroupService;
 import lombok.RequiredArgsConstructor;
