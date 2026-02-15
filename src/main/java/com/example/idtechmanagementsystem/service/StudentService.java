@@ -5,6 +5,7 @@ import com.example.idtechmanagementsystem.dto.response.StudentDto;
 import com.example.idtechmanagementsystem.entity.Student;
 import com.example.idtechmanagementsystem.exception.CustomException;
 import com.example.idtechmanagementsystem.mapper.StudentMapper;
+import com.example.idtechmanagementsystem.queue.QueueSender;
 import com.example.idtechmanagementsystem.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,11 +17,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentService {
     private  final StudentRepository studentRepository;
+    private final QueueSender queueSender;
 
-    public StudentDto  createStudent(CreateStudentDto studentDto){
+    public StudentDto createStudent(CreateStudentDto studentDto) {
+
         Student student = StudentMapper.mapToStudent(studentDto);
-        return StudentMapper.mapToStudentDto( studentRepository.save(student));
-    };
+        Student savedStudent = studentRepository.save(student);
+        StudentDto responseDto = StudentMapper.mapToStudentDto(savedStudent);
+        queueSender.sendStudentIdToCardQueue(responseDto);
+        return responseDto;
+    }
 
 
     public List<StudentDto> getAllStudents(){

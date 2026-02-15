@@ -14,8 +14,19 @@ spring:
     redis:
       host: localhost
       port: 6379
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
   liquibase:
     change-log: classpath:/liquibase/changelog-master.yml
+
+rabbitmq:
+  queue:
+    student: student-card-queue
+    mail: student-mail-queue
 
 server:
   port: 9898
