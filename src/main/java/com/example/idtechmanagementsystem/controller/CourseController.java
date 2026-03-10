@@ -7,6 +7,7 @@ import com.example.idtechmanagementsystem.entity.Group;
 import com.example.idtechmanagementsystem.service.CourseService;
 import com.example.idtechmanagementsystem.service.GroupService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -36,6 +37,7 @@ public class CourseController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CourseDto> create(@RequestBody CreateCourseDto courseDto){
         CourseDto createdCourse = courseService.createCourse(courseDto);
 
