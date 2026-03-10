@@ -1,5 +1,6 @@
 package com.example.idtechmanagementsystem.controller;
 
+import com.example.idtechmanagementsystem.dto.request.AddStudentToGroupDto;
 import com.example.idtechmanagementsystem.dto.request.CreateGroupDto;
 import com.example.idtechmanagementsystem.dto.response.GroupDto;
 import com.example.idtechmanagementsystem.dto.response.StudentDto;
@@ -52,5 +53,10 @@ public class GroupController {
     public ResponseEntity<Void> update(@RequestBody CreateGroupDto request) {
         groupService.updateGroup(request);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/add-students")
+    public  void addStudentToGroup(@RequestBody AddStudentToGroupDto addStudentToGroupDto) {
+        groupService.addStudentToGroup(addStudentToGroupDto);
     }
 }

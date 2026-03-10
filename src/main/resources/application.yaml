@@ -28,5 +28,12 @@ rabbitmq:
     student: student-card-queue
     mail: student-mail-queue
 
+client:
+  payments:
+    url: http://localhost:8082
+
+
+
+
 server:
   port: 9898
