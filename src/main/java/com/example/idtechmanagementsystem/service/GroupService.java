@@ -1,18 +1,23 @@
 package com.example.idtechmanagementsystem.service;
 
+import com.example.idtechmanagementsystem.client.PaymentClient;
+import com.example.idtechmanagementsystem.dto.request.AddStudentToGroupDto;
 import com.example.idtechmanagementsystem.dto.request.CreateGroupDto;
 import com.example.idtechmanagementsystem.dto.response.GroupDto;
 import com.example.idtechmanagementsystem.entity.Course;
 import com.example.idtechmanagementsystem.entity.Group;
+import com.example.idtechmanagementsystem.entity.Student;
 import com.example.idtechmanagementsystem.entity.Teacher;
 import com.example.idtechmanagementsystem.exception.CustomException;
 import com.example.idtechmanagementsystem.mapper.GroupMapper;
 import com.example.idtechmanagementsystem.repository.CourseRepository;
 import com.example.idtechmanagementsystem.repository.GroupRepository;
+import com.example.idtechmanagementsystem.repository.StudentRepository;
 import com.example.idtechmanagementsystem.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +27,8 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final TeacherRepository teacherRepository;
     private final CourseRepository courseRepository;
+    private final StudentRepository studentRepository;
+    private final PaymentClient paymentClient;
 
     public GroupDto createGroup(CreateGroupDto groupDto) {
         Group group = GroupMapper.mapToGroup(groupDto);
@@ -70,5 +77,18 @@ public class GroupService {
     }
 
 
+    @Transactional
+ public void addStudentToGroup(AddStudentToGroupDto addStudentToGroupDto) {
+     Group group = groupRepository.findById(addStudentToGroupDto.getGroupId())
+             .orElseThrow(()-> new CustomException("Group not found!","id", HttpStatus.NOT_FOUND));
 
+     Student student = studentRepository.findById(addStudentToGroupDto.getStudentId())
+             .orElseThrow(()-> new CustomException("Student not found!","id", HttpStatus.NOT_FOUND));
+
+        if (!student.getGroups().contains(group)) {
+            student.getGroups().add(group);
+        }
+        paymentClient.enrollmentPayment(addStudentToGroupDto);
+        studentRepository.save(student);
+ }
 }
